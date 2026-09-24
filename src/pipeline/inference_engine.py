@@ -272,6 +272,28 @@ class MultimodalInferenceEngine:
             except Exception:
                 pass
 
+        # Convert annotated output video to browser-compliant H.264 format
+        if render_annotated_video and out_path.exists() and out_path.stat().st_size > 0:
+            h264_out = out_path.parent / f"{out_path.stem}_browser.mp4"
+            try:
+                import imageio_ffmpeg
+                import subprocess
+                ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+                cmd = [
+                    ffmpeg_exe, "-y",
+                    "-i", str(out_path),
+                    "-c:v", "libx264",
+                    "-pix_fmt", "yuv420p",
+                    "-preset", "ultrafast",
+                    "-crf", "24",
+                    str(h264_out)
+                ]
+                res = subprocess.run(cmd, capture_output=True)
+                if res.returncode == 0 and h264_out.exists() and h264_out.stat().st_size > 0:
+                    out_path = h264_out
+            except Exception as e:
+                print(f"[Warning] Could not transcode annotated video to H.264: {e}")
+
         total_elapsed = time.perf_counter() - t_start_proc
         fps_proc = frame_idx / total_elapsed if total_elapsed > 0 else 0
 

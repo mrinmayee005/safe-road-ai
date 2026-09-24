@@ -52,3 +52,7 @@ desktop.ini
 .pytest_cache/
 .coverage
 htmlcov/
+results/h264_cache/
+results/annotated_*.mp4
+results/test_*.mp4
+test_eval.py
