@@ -81,7 +81,7 @@ Safe Road AI now implements **three independent and interconnected dataset pipel
 2. **Project 2: User Real-World Dashcam Dataset (CCD — 75,000 HD Frames)**
    - Built directly from the user's uploaded `archive/` containing 1,500 dashcam videos (720p HD).
    - Real-world environmental challenges: Day, Night, Rainy, Snowy, camera glare, and vehicle deformation.
-   - Evaluates real in-the-wild visual detection and ego vs non-ego accident disambiguation.
+   - Evaluates real in-the-wild visual detection and suppression of false alarms from other cars colliding in adjacent lanes.
 
 3. **Project 3: Real-World Multimodal Telematics Benchmark (Phase 2 Candidate)**
    - 120 multimodal driving journeys combining authentic 50Hz mobile phone IMU noise with realistic road dynamics.
@@ -89,7 +89,7 @@ Safe Road AI now implements **three independent and interconnected dataset pipel
 
 4. **Cross-Dataset Benchmark & Accuracy Mapping**
    - Direct side-by-side performance mapping across E1 (Video), E2 (Sensor), E3 (Fusion), and E4 (Temporal).
-   - Analyzes why synthetic data achieves 100% and why real dashcam video drops to 64.3% due to glare and non-ego collisions, proving why multimodal fusion is essential for Phase 2.
+   - Analyzes why synthetic data achieves 100% and why real dashcam video drops to 64.3% due to glare and adjacent-lane collisions, proving why multimodal fusion is essential for Phase 2.
 
 ---
 
@@ -97,7 +97,7 @@ Safe Road AI now implements **three independent and interconnected dataset pipel
 
 | Metric | Synthetic Dataset (Baseline) | User Real Dashcam (CCD) | Real Telematics (Phase 2) | Key Operational Takeaway |
 | :--- | :---: | :---: | :---: | :--- |
-| **E1: Video-Only Accuracy** | **100.0%** | **64.3%** | **62.5%** | Real video suffers from night glare, rain, blur, and non-ego crashes. |
+| **E1: Video-Only Accuracy** | **100.0%** | **64.3%** | **62.5%** | Real video suffers from night glare, rain, blur, and crashes in other lanes. |
 | **E1: Video False Alarm Rate** | **0.0%** | **71.4%** | **0.0%** | When camera sees other cars crash, it triggers false emergency alarms. |
 | **E2: Sensor-Only Accuracy** | **100.0%** | **100.0%** | **100.0%** | Host vehicle collision shock is distinct from normal driving. |
 | **E3: Multimodal Fusion Acc** | **100.0%** | **100.0%** | **100.0%** | Multimodal fusion resolves visual ambiguities using IMU motion. |

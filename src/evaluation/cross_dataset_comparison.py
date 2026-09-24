@@ -134,7 +134,7 @@ def generate_cross_dataset_comparison() -> Dict[str, Any]:
     # 3. Visual Plot 2: Radar / Spider Evaluation Matrix
     # -------------------------------------------------------------
     categories = ['Visual\nClarity', 'IMU Hardware\nRealism', 'Weather/Light\nDiversity',
-                  'Ego/Non-Ego\nDisambiguation', 'Pothole/Brake\nRejection', 'Phase 2\nReadiness']
+                  'Adjacent-Lane Crash\nSuppression', 'Pothole/Brake\nRejection', 'Phase 2\nReadiness']
     num_vars = len(categories)
 
     # Normalized qualitative / quantitative radar scores (0 to 100)

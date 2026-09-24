@@ -38,7 +38,7 @@
 10. **Architecture Diagram for Proposed Work** — End-to-end block diagram with exact models
 11. **Dataset Creation & Validation** — 3 datasets: Synthetic baseline, CCD 75,000 real dashcam frames, and Real Telematics benchmark
 12. **Mathematical Model** — Exact equations for acceleration magnitude ($A$), rotation ($G$), jerk ($dA/dt$), fusion ($P_{\text{final}}$), and temporal persistence
-13. **Experimental Results & Benchmark Mapping** — E1 to E4 comparison table, false-alarm reduction, and non-ego crash discovery
+13. **Experimental Results & Benchmark Mapping** — E1 to E4 comparison table, false-alarm reduction, and adjacent-lane crash discovery
 14. **Conclusion & Phase 2 Roadmap** — Mobile edge deployment (TFLite/ONNX), GPS dispatch, and two-wheeler extension
 15. **References** — Key IEEE & Elsevier citations
 
@@ -73,7 +73,7 @@
 * **Why Single-Modality Approaches Fail (The Research Dilemma)**:
   * **Video-Only Vision Systems Fail Because**:
     1. Blinded by night glare, high-beam headlights, heavy rain on windshields, and wiper motion blur.
-    2. **The "Non-Ego Collision" Bug**: In camera-only systems, when another vehicle crashes in the adjacent lane, the camera panics and sounds false alarms even though the host car is completely untouched.
+    2. **The "Adjacent-Lane Collision" False Alarm**: In camera-only systems, when another vehicle crashes in the adjacent lane, the camera panics and sounds false alarms even though the host car is completely untouched.
   * **Sensor-Only Accelerometer Systems Fail Because**:
     1. Severe road defects (sharp potholes, concrete expansion joints, steep speed breakers) create vertical shock spikes resembling crashes.
     2. Phone drops or abrupt braking at traffic signals create high false alarm rates ($>40\%$).
@@ -165,7 +165,7 @@
 #### Table 2: Detailed Comparative Analysis of Existing Systems vs Safe Road AI
 | Title & Citation | Implementation Method | Modality | Reported Metrics | Critical Technical Limitation | How Safe Road AI Overcomes This Limitation |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Bao et al. [2]** (ACM MM 2020) | Spatio-Temporal Relational CNN | Video Dashcam Only | 85.6% Recall, 500 ms latency | High false alarm rate on **non-ego crashes**; blinded by night headlight glare. | We fuse video with **50 Hz phone IMU**; non-ego crashes produce zero IMU shock and are discarded! |
+| **Bao et al. [2]** (ACM MM 2020) | Spatio-Temporal Relational CNN | Video Dashcam Only | 85.6% Recall, 500 ms latency | High false alarm rate on **adjacent-lane crashes**; blinded by night headlight glare. | We fuse video with **50 Hz phone IMU**; adjacent crashes produce zero IMU shock and are discarded! |
 | **Aloul et al. [3]** (IEEE Trans. ITS 2018) | Heuristic G-force Acceleration Threshold | Smartphone Accelerometer Only | 88.0% Accuracy on lab tests | **Extreme False Alarm Rate (>40%)** on potholes, speed breakers, and dropped phones. | We implement a **FIFO sliding temporal gate ($W=3, K=2$)**; 0.1s road bumps are safely filtered out! |
 | **Dogru & Subasi [4]** (Comput. Netw. 2021) | XGBoost & Random Forest | OBD-II / CAN-Bus Telematics | 89.2% Accuracy on vehicle bus | **Requires expensive external OBD-II hardware ($₹5K–₹10K$)**; incompatible with 90% cars. | **100% Zero-Hardware-Cost Software Solution** using driver's existing smartphone sensors. |
 | **Prashanth et al. [14]** (IEEE Sensors 2023) | 3D-CNN (Res3D) + LSTM Fusion | Video + Accelerometer | 92.4% Detection Accuracy | **Computationally heavy ($>1.5$s latency)**; causes thermal throttling and rapid battery drain on phones. | We utilize **MobileNetV3-Small + Random Forest**, executing in **sub-40 ms ($14.2+$ FPS)** on standard mobile CPUs! |
@@ -176,7 +176,7 @@
 ## Slide 11: Research Gaps Identified & Our Concrete Solutions
 
 ### Exact Text on Slide:
-* **Research Gap 1: The Non-Ego Crash False Alarm Problem (Identified in Bao et al. [2])**:
+* **Research Gap 1: Adjacent-Lane Crash False Alarm Problem (Identified in Bao et al. [2])**:
   * *Limitation*: Cameras alone cannot tell if a crash occurred to the host car or to another car ahead in an adjacent lane. In CCD real dashcam data, this causes an unacceptable **71.4% False Alarm Rate**.
   * *Our Implementation*: Safe Road AI introduces **Kinematic Cross-Verification**. If the camera predicts crash ($P_v = 0.85$) but the phone accelerometer records zero impact shock ($P_s = 0.05$), the fusion formula suppresses the false alert.
 * **Research Gap 2: Road Surface Anomaly Misclassification (Identified in Aloul et al. [3])**:
@@ -261,7 +261,7 @@ flowchart TD
 | Dataset | Data Type & Modality | Volume / Scale | Environmental Conditions | Primary Research Function |
 | :--- | :--- | :--- | :--- | :--- |
 | **Project 1: Synthetic Dataset (Baseline Control)** | Paired 6.0s synthetic video + synchronized 50 Hz IMU | 280 paired clips (140 normal, 140 crashes) | Clean daylight, pristine polygon physics, no sensor noise | Validates mathematical correctness of fusion algorithms under ideal conditions (100% control). |
-| **Project 2: Real Dashcam Dataset (CCD Benchmark)** | Real dashcam accident videos (720p HD) | **75,000 Real Frames** (1,500 real video clips) | 1,141 Normal Day, 175 Night Darkness, 235 Snowy, 124 Rainy | Evaluates in-the-wild video degradation (glare, blur) and tests **699 non-ego crash events**. |
+| **Project 2: Real Dashcam Dataset (CCD Benchmark)** | Real dashcam accident videos (720p HD) | **75,000 Real Frames** (1,500 real video clips) | 1,141 Normal Day, 175 Night Darkness, 235 Snowy, 124 Rainy | Evaluates in-the-wild video degradation (glare, blur) and tests **699 adjacent-lane crash events**. |
 | **Project 3: Real Multimodal Telematics Benchmark (Phase 2)** | Synthetic dashcam video + authentic 50 Hz mobile IMU noise | 120 journeys (60 normal, 60 collisions) | Real engine harmonics (25–35 Hz), speed bumps, deep potholes, hard braking | Validates false-alarm suppression against real developing-world road infrastructure. |
 | **India Road Accident Predictive Dataset** | Structured tabular historical records (MoRTH) | 3,000 accident records (2018–2023) | Fatal, Serious, and Minor accident severities across India | Used for training post-crash severity classification and risk zone mapping. |
 
@@ -306,7 +306,7 @@ $$\mathbf{\text{Trigger SOS}} =
 #### Table 4: Multi-Dataset Experimental Benchmark Results (E1 to E4)
 | Experiment Setup | Description & Modalities Used | Project 1: Synthetic | Project 2: Real Dashcam (CCD) | Project 3: Real Telematics | Key Research Finding |
 | :--- | :--- | :---: | :---: | :---: | :--- |
-| **E1: Video-Only Accuracy** | MobileNetV3-Small on video frames alone | **100.0%** | **64.3%** | **62.5%** | Real video degrades due to weather, night glare, and non-ego collisions. |
+| **E1: Video-Only Accuracy** | MobileNetV3-Small on video frames alone | **100.0%** | **64.3%** | **62.5%** | Real video degrades due to weather, night glare, and adjacent-lane collisions. |
 | **E1: False Alarm Rate (FAR)** | Frequency of false crash alarms | **0.0%** | **71.4%** | **0.0%** | **Camera alone panics on crashes occurring in other lanes!** |
 | **E2: Sensor-Only Accuracy** | Random Forest on 50 Hz IMU features alone | **100.0%** | **100.0%** | **100.0%** | Physical deceleration easily identifies real vehicular impacts. |
 | **E3: Multimodal Fusion** | Weighted fusion: $P_{\text{final}} = 0.55 P_v + 0.45 P_s$ | **100.0%** | **100.0%** | **100.0%** | **Camera errors are immediately corrected by physical motion sensors!** |
@@ -324,7 +324,7 @@ $$\mathbf{\text{Trigger SOS}} =
 ### Exact Text on Slide:
 * **Conclusions Established (Phase 1)**:
   1. Built and validated a complete multimodal accident detection system operating purely on smartphone hardware.
-  2. Discovered and resolved the **Non-Ego Collision Problem** (where camera-only systems fail with a 71.4% false alarm rate).
+  2. Discovered and resolved the **Adjacent-Lane Collision Problem** (where camera-only systems fail with a 71.4% false alarm rate).
   3. Demonstrated that late fusion ($P_{\text{final}}$) combined with a FIFO temporal filter achieves **100% recall with 0.0% false alarms** on real-world datasets.
   4. Confirmed mobile edge execution throughput of **14.2+ FPS on mobile CPU**, well exceeding the 5–10 FPS real-time requirement.
 * **Phase 2 Implementation Roadmap (Next Steps)**:

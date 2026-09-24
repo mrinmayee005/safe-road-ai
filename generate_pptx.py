@@ -330,7 +330,7 @@ p.font.color.rgb = RGBColor(220, 38, 38)
 
 b_c1 = [
     "• Blinding Environmental Factors: High-beam headlight glare, night darkness, rain streaks, and windshield wipers distort visual road semantics.",
-    "• The 'Non-Ego Collision' Catastrophe: When two vehicles crash ahead in an adjacent lane, a camera-only system detects visual collision and panics (71.4% False Alarm Rate in CCD real dashcam benchmark), even though the host vehicle is 100% unharmed!",
+    "• Adjacent-Lane Collision False Alarms: When two vehicles crash ahead in an adjacent lane, a camera-only system detects visual collision and panics (71.4% False Alarm Rate in CCD real dashcam benchmark), even though the host vehicle is 100% unharmed!",
     "• Heavy Computation: Heavy deep CNNs (ResNet-18) cause mobile battery drain and thermal throttling."
 ]
 for b in b_c1:
@@ -641,7 +641,7 @@ for j, h in enumerate(headers9):
     p.alignment = PP_ALIGN.CENTER
 
 data9 = [
-    ["Bao et al. [2]\n(ACM MM 2020)", "Accident anticipation in dashcam video", "Spatio-Temporal Relational CNN (Video Only)", "Accuracy: 85.6%\nLatency: 500 ms", "High False Alarm Rate on non-ego crashes; blinded by night headlight glare.", "We cross-verify video with 50 Hz phone IMU; non-ego crashes have zero IMU shock and are discarded!"],
+    ["Bao et al. [2]\n(ACM MM 2020)", "Accident anticipation in dashcam video", "Spatio-Temporal Relational CNN (Video Only)", "Accuracy: 85.6%\nLatency: 500 ms", "High False Alarm Rate on adjacent-lane crashes; blinded by night headlight glare.", "We cross-verify video with 50 Hz phone IMU; adjacent crashes have zero IMU shock and are discarded!"],
     ["Aloul et al. [3]\n(IEEE Trans. ITS 2018)", "Smartphone-based crash detection", "Heuristic G-force threshold trigger (IMU Only)", "Accuracy: 88.0%\nResponse: 50 ms", "Extreme False Alarms (>40%) on potholes, speed breakers, and dropped phones.", "We implement a FIFO temporal gate (W=3, K=2); transient 0.1s road bumps are safely filtered out!"],
     ["Dogru & Subasi [4]\n(Comput. Netw. 2021)", "Vehicle telematics accident classification", "XGBoost & Random Forest on CAN-Bus data", "Accuracy: 89.2%\nReduced delay", "Requires expensive OBD-II dongles ($₹5K–₹10K); incompatible with 90% cars.", "100% zero-hardware-cost software running on the driver's existing smartphone sensors."]
 ]
@@ -732,7 +732,7 @@ p.font.bold = True
 p.font.color.rgb = NAVY_HEADER
 
 gaps = [
-    ("Gap 1: Non-Ego Crash False Alarms (Bao et al. [2])",
+    ("Gap 1: Adjacent-Lane Crash False Alarms (Bao et al. [2])",
      "Camera-only models trigger false alarms when other cars crash ahead in adjacent lanes (71.4% False Alarm Rate in CCD). Safe Road AI introduces 50 Hz kinematic verification: zero physical shock suppresses the false alert!"),
     ("Gap 2: Road Surface Anomaly Spikes (Aloul et al. [3])",
      "Potholes and speed bumps create acceleration spikes (>15 m/s²). Safe Road AI's FIFO temporal filter requires sustained high risk across W=3 windows; brief <0.15s potholes fail the rule and are 100% discarded!"),
@@ -826,7 +826,7 @@ for j, h in enumerate(h15):
 
 data15 = [
     ["Project 1: Synthetic Dataset\n(Baseline Control)", "Synthetic Video (5 FPS) +\n50 Hz 6-Axis IMU", "280 Paired Clips\n(140 crash, 140 normal)", "Clean daylight, pristine polygon physics", "Mathematical control baseline (validates model convergence to 100%)."],
-    ["Project 2: Real Dashcam Dataset\n(CCD Benchmark)", "Real Dashcam Video\n(720p HD @ 30 FPS)", "75,000 Real Frames\n(1,500 real accident clips)", "1,141 Day, 175 Night, 235 Snowy, 124 Rainy", "Evaluates real camera degradation and tests 699 non-ego crash events."],
+    ["Project 2: Real Dashcam Dataset\n(CCD Benchmark)", "Real Dashcam Video\n(720p HD @ 30 FPS)", "75,000 Real Frames\n(1,500 real accident clips)", "1,141 Day, 175 Night, 235 Snowy, 124 Rainy", "Evaluates real camera degradation and tests 699 adjacent-lane crash events."],
     ["Project 3: Real Telematics Benchmark\n(Phase 2 Candidate)", "Dashcam Video +\n50 Hz Mobile IMU Noise", "120 Journeys\n(60 normal, 60 crashes)", "Engine harmonics (25–35 Hz), potholes, speed bumps", "Stress-tests false-alarm rejection against developing-world road defects."],
     ["India Road Accident Dataset\n(Predictive Telematics)", "Structured MoRTH records\n(Tabular features)", "3,000 Records\n(2018–2023)", "Fatal, Serious, Minor accident severities", "Trains post-crash emergency severity scoring and black-spot risk prediction."]
 ]
@@ -945,7 +945,7 @@ for j, h in enumerate(h17):
 
 data17 = [
     ["E1: Video-Only Accuracy", "100.0%", "64.3%", "62.5%", "Weather/Glare drops"],
-    ["E1: False Alarm Rate", "0.0%", "71.4%", "0.0%", "Non-ego crash panic!"],
+    ["E1: False Alarm Rate", "0.0%", "71.4%", "0.0%", "Adjacent crash false alarms!"],
     ["E2: Sensor-Only Accuracy", "100.0%", "100.0%", "100.0%", "Impact shock caught"],
     ["E3: Multimodal Fusion", "100.0%", "100.0%", "100.0%", "Neutralizes errors!"],
     ["E4: Fusion + Temporal Filter", "100.0%", "100.0%", "100.0%", "0.0% False Alarms!"]
@@ -1017,7 +1017,7 @@ p.font.color.rgb = GREEN_ACCENT
 
 con_items = [
     "1. Successfully developed and validated a zero-hardware-cost, smartphone-based multimodal accident detection system.",
-    "2. Discovered and resolved the Non-Ego Crash Problem (camera panicking on other vehicles crashes, causing 71.4% false alarms in CCD benchmark).",
+    "2. Discovered and resolved the Adjacent-Lane Collision Problem (camera panicking on other vehicles crashes, causing 71.4% false alarms in CCD benchmark).",
     "3. Proved that late decision fusion (P_final = 0.55Pv + 0.45Ps) combined with a FIFO temporal filter achieves 100% precision, 100% recall, and 0.0% false alarm rate across all datasets.",
     "4. Demonstrated sub-40 ms mobile CPU latency (14.2+ FPS throughput), proving production readiness."
 ]
