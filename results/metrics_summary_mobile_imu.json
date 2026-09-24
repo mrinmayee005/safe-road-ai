@@ -1,0 +1,80 @@
+{
+  "dataset_name": "Mobile Sensor IMU Dataset (8,000 Smartphone Records)",
+  "total_samples": 8000,
+  "features": [
+    "Acc_X",
+    "Acc_Y",
+    "Acc_Z",
+    "Gyro_X",
+    "Gyro_Y",
+    "Gyro_Z",
+    "Speed_kmh",
+    "Motion_Intensity"
+  ],
+  "class_distribution": {
+    "normal_samples": 7000,
+    "crash_samples": 1000,
+    "normal_pct": 87.5,
+    "crash_pct": 12.5
+  },
+  "models": {
+    "Random Forest": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1750,
+          0
+        ],
+        [
+          0,
+          250
+        ]
+      ]
+    },
+    "Extra Trees": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1750,
+          0
+        ],
+        [
+          0,
+          250
+        ]
+      ]
+    },
+    "Gradient Boosting": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "confusion_matrix": [
+        [
+          1750,
+          0
+        ],
+        [
+          0,
+          250
+        ]
+      ]
+    }
+  },
+  "feature_importances": {
+    "Gyro_X": 0.0001,
+    "Gyro_Y": 0.0002,
+    "Gyro_Z": 0.0003,
+    "Acc_X": 0.1278,
+    "Acc_Y": 0.1583,
+    "Speed_kmh": 0.1601,
+    "Motion_Intensity": 0.2002,
+    "Acc_Z": 0.353
+  }
+}
