@@ -65,13 +65,32 @@ class MultimodalInferenceEngine:
         Runs frame-by-frame and window-synchronized multimodal inference.
         Returns detailed timeline dictionary and metadata.
         """
-        video_path = Path(video_path)
-        sensor_csv_path = Path(sensor_csv_path)
+        video_path_str = str(video_path).replace("\\", "/")
+        sensor_csv_str = str(sensor_csv_path).replace("\\", "/")
 
+        video_path = Path(video_path_str)
+        sensor_csv_path = Path(sensor_csv_str)
+
+        # Robust Cross-Platform Resolution for Linux (Streamlit Cloud) & Windows
         if not video_path.exists():
-            raise FileNotFoundError(f"Video file not found: {video_path}")
+            if (PROJECT_ROOT / video_path_str).exists():
+                video_path = PROJECT_ROOT / video_path_str
+            elif (PROJECT_ROOT / "data" / video_path_str).exists():
+                video_path = PROJECT_ROOT / "data" / video_path_str
+            elif (PROJECT_ROOT / video_path.name).exists():
+                video_path = PROJECT_ROOT / video_path.name
+            else:
+                raise FileNotFoundError(f"Video file not found: {video_path}")
+
         if not sensor_csv_path.exists():
-            raise FileNotFoundError(f"Sensor file not found: {sensor_csv_path}")
+            if (PROJECT_ROOT / sensor_csv_str).exists():
+                sensor_csv_path = PROJECT_ROOT / sensor_csv_str
+            elif (PROJECT_ROOT / "data" / sensor_csv_str).exists():
+                sensor_csv_path = PROJECT_ROOT / "data" / sensor_csv_str
+            elif (PROJECT_ROOT / sensor_csv_path.name).exists():
+                sensor_csv_path = PROJECT_ROOT / sensor_csv_path.name
+            else:
+                raise FileNotFoundError(f"Sensor file not found: {sensor_csv_path}")
 
         # 1. Load sensor data and compute continuous magnitudes
         sensor_df = pd.read_csv(sensor_csv_path)
@@ -88,8 +107,13 @@ class MultimodalInferenceEngine:
         writer = None
         if render_annotated_video:
             out_path = Path(output_video_path) if output_video_path else RESULTS_DIR / f"annotated_{video_path.stem}.mp4"
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            writer = cv2.VideoWriter(str(out_path), fourcc, fps, (width, height))
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+                writer = cv2.VideoWriter(str(out_path), fourcc, fps, (width, height))
+            except Exception as e:
+                print(f"[Warning] Failed to initialize VideoWriter on this platform: {e}")
+                writer = None
 
         timeline = []
         self.temporal_engine.reset()
@@ -236,13 +260,17 @@ class MultimodalInferenceEngine:
                     1
                 )
 
-                writer.write(hud_frame)
+                if writer is not None and writer.isOpened():
+                    writer.write(hud_frame)
 
             frame_idx += 1
 
         cap.release()
         if writer is not None:
-            writer.release()
+            try:
+                writer.release()
+            except Exception:
+                pass
 
         total_elapsed = time.perf_counter() - t_start_proc
         fps_proc = frame_idx / total_elapsed if total_elapsed > 0 else 0

@@ -826,8 +826,11 @@ def main():
             sel_id = int(selected_sample_str.split(":")[0])
             sel_row = df_meta[df_meta['sample_id'] == sel_id].iloc[0]
 
-            vid_file = PROJECT_ROOT / sel_row['video_path']
-            sensor_file = PROJECT_ROOT / sel_row['sensor_path']
+            vid_path_str = str(sel_row['video_path']).replace("\\", "/")
+            sensor_path_str = str(sel_row['sensor_path']).replace("\\", "/")
+
+            vid_file = PROJECT_ROOT / vid_path_str
+            sensor_file = PROJECT_ROOT / sensor_path_str
 
         with ctl_col2:
             arch_choice = st.selectbox("Select Vision Model:", ["mobilenet_v3_small", "resnet18"], index=0,
@@ -853,93 +856,111 @@ def main():
             temp_win = st.slider("Smoothing Window (Frames):", 1, 7, 3, 1)
 
         if st.button("⚡ Run Synchronized Multimodal Inference", type="primary"):
-            with st.spinner("Running synchronized inference engine..."):
-                engine = MultimodalInferenceEngine(
-                    video_model_arch=arch_choice,
-                    sensor_model_type=sensor_choice,
-                    alpha=alpha_val,
-                    threshold=thresh_val,
-                    temporal_window=temp_win,
-                    temporal_persistence=max(1, temp_win - 1)
-                )
+            # Cross-platform path validation for Streamlit Cloud (Linux) & Windows
+            if not vid_file.exists():
+                if (PROJECT_ROOT / "data" / vid_path_str).exists():
+                    vid_file = PROJECT_ROOT / "data" / vid_path_str
+                elif (PROJECT_ROOT / Path(vid_path_str).name).exists():
+                    vid_file = PROJECT_ROOT / Path(vid_path_str).name
 
-                result = engine.run_synchronized_inference(
-                    video_path=vid_file,
-                    sensor_csv_path=sensor_file,
-                    render_annotated_video=True
-                )
+            if not sensor_file.exists():
+                if (PROJECT_ROOT / "data" / sensor_path_str).exists():
+                    sensor_file = PROJECT_ROOT / "data" / sensor_path_str
+                elif (PROJECT_ROOT / Path(sensor_path_str).name).exists():
+                    sensor_file = PROJECT_ROOT / Path(sensor_path_str).name
 
-            st.divider()
-            res_col1, res_col2 = st.columns([1, 1])
+            if not vid_file.exists():
+                st.error(f"⚠️ Video clip could not be loaded: `{vid_path_str}`. Please verify file is present.")
+            elif not sensor_file.exists():
+                st.error(f"⚠️ Sensor data could not be loaded: `{sensor_path_str}`. Please verify file is present.")
+            else:
+                with st.spinner("Running synchronized inference engine..."):
+                    engine = MultimodalInferenceEngine(
+                        video_model_arch=arch_choice,
+                        sensor_model_type=sensor_choice,
+                        alpha=alpha_val,
+                        threshold=thresh_val,
+                        temporal_window=temp_win,
+                        temporal_persistence=max(1, temp_win - 1)
+                    )
 
-            with res_col1:
-                st.subheader("Video Stream")
-                if result['annotated_video_path'] and Path(result['annotated_video_path']).exists():
-                    st.video(result['annotated_video_path'])
-                else:
-                    st.video(str(vid_file))
+                    result = engine.run_synchronized_inference(
+                        video_path=vid_file,
+                        sensor_csv_path=sensor_file,
+                        render_annotated_video=True
+                    )
 
-            with res_col2:
-                st.subheader("Emergency Detection Decision")
-                if result['accident_detected']:
-                    st.markdown(f"""
-                    <div class="alert-box-danger">
-                        <h3>🚨 HIGH RISK COLLISION DETECTED!</h3>
-                        <p><strong>First Alert Time:</strong> at {result['first_alert_time_sec']:.2f} seconds into the clip</p>
-                        <p><strong>Status:</strong> Severe crash verified by both Camera + Motion sensors.</p>
-                        <p><strong>Automated Emergency Dispatch Triggered:</strong></p>
-                        <p>📍 <strong>GPS Coordinates:</strong> Lat {DEFAULT_GPS['latitude']}, Lon {DEFAULT_GPS['longitude']}</p>
-                        <p>🏙️ <strong>Location:</strong> {DEFAULT_GPS['location_name']}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                else:
-                    st.markdown(f"""
-                    <div class="alert-box-success">
-                        <h3>✅ NORMAL VEHICLE OPERATION</h3>
-                        <p><strong>Status:</strong> Normal driving. No accident confirmed.</p>
-                        <p><strong>Anti-False-Alarm Filter:</strong> Any bump, pothole, or hard turn was safely filtered out.</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                st.divider()
+                res_col1, res_col2 = st.columns([1, 1])
 
-                st.write(f"**AI Processing Speed:** {result['processed_fps']:.1f} Frames Per Second")
-                st.write(f"**Ground Truth (Real Label):** {'Accident Event' if sel_row['label'] == 1 else 'Normal Driving'}")
+                with res_col1:
+                    st.subheader("Video Stream")
+                    if result['annotated_video_path'] and Path(result['annotated_video_path']).exists():
+                        st.video(result['annotated_video_path'])
+                    else:
+                        st.video(str(vid_file))
 
-            # Telemetry Timeline
-            timeline = pd.DataFrame(result['timeline'])
-            if not timeline.empty:
-                st.subheader("Synchronized Modality Signals over Time")
-                fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 5), sharex=True, dpi=180)
-                fig.patch.set_facecolor('#0F172A')
+                with res_col2:
+                    st.subheader("Emergency Detection Decision")
+                    if result['accident_detected']:
+                        st.markdown(f"""
+                        <div class="alert-box-danger">
+                            <h3>🚨 HIGH RISK COLLISION DETECTED!</h3>
+                            <p><strong>First Alert Time:</strong> at {result['first_alert_time_sec']:.2f} seconds into the clip</p>
+                            <p><strong>Status:</strong> Severe crash verified by both Camera + Motion sensors.</p>
+                            <p><strong>Automated Emergency Dispatch Triggered:</strong></p>
+                            <p>📍 <strong>GPS Coordinates:</strong> Lat {DEFAULT_GPS['latitude']}, Lon {DEFAULT_GPS['longitude']}</p>
+                            <p>🏙️ <strong>Location:</strong> {DEFAULT_GPS['location_name']}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                        <div class="alert-box-success">
+                            <h3>✅ NORMAL VEHICLE OPERATION</h3>
+                            <p><strong>Status:</strong> Normal driving. No accident confirmed.</p>
+                            <p><strong>Anti-False-Alarm Filter:</strong> Any bump, pothole, or hard turn was safely filtered out.</p>
+                        </div>
+                        """, unsafe_allow_html=True)
 
-                for ax in (ax1, ax2):
-                    ax.set_facecolor('#1E293B')
-                    ax.tick_params(colors='#F1F5F9', labelsize=9)
-                    for spine in ax.spines.values():
-                        spine.set_color('#334155')
-                    ax.xaxis.label.set_color('#F1F5F9')
-                    ax.yaxis.label.set_color('#F1F5F9')
-                    ax.grid(True, linestyle="--", alpha=0.3, color='#475569')
+                    st.write(f"**AI Processing Speed:** {result['processed_fps']:.1f} Frames Per Second")
+                    st.write(f"**Ground Truth (Real Label):** {'Accident Event' if sel_row['label'] == 1 else 'Normal Driving'}")
 
-                # Probabilities
-                ax1.plot(timeline['timestamp_sec'], timeline['pv'], label="Camera Risk P(v)", color="#38BDF8", lw=1.8, linestyle=":")
-                ax1.plot(timeline['timestamp_sec'], timeline['ps'], label="Sensor Risk P(s)", color="#10B981", lw=1.8, linestyle="--")
-                ax1.plot(timeline['timestamp_sec'], timeline['p_final'], label="Combined Risk P(final)", color="#F59E0B", lw=2.0)
-                ax1.plot(timeline['timestamp_sec'], timeline['smoothed_p'], label="Temporal Smoothed Risk", color="#EF4444", lw=2.5)
-                ax1.axhline(thresh_val, color="#F87171", linestyle=":", label=f"Alert Threshold T={thresh_val}")
-                ax1.set_ylabel("Risk Probability (0 to 1)", fontweight='bold')
-                ax1.set_ylim(-0.05, 1.05)
-                ax1.legend(loc="upper left", ncol=3, fontsize=8, facecolor='#0F172A', edgecolor='#334155', labelcolor='#F8FAFC')
-                ax1.set_title("Accident Risk Probabilities by Modality", color='#F8FAFC', fontweight='bold', pad=8)
+                # Telemetry Timeline
+                timeline = pd.DataFrame(result['timeline'])
+                if not timeline.empty:
+                    st.subheader("Synchronized Modality Signals over Time")
+                    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 5), sharex=True, dpi=180)
+                    fig.patch.set_facecolor('#0F172A')
 
-                # Physical signals
-                ax2.plot(timeline['timestamp_sec'], timeline['acc_mag'], label="Total G-Force Magnitude A (m/s²)", color="#818CF8", lw=1.8)
-                ax2.plot(timeline['timestamp_sec'], timeline['gyro_mag'] * 5.0, label="Rotation Magnitude G x5 (rad/s)", color="#F472B6", lw=1.8)
-                ax2.set_xlabel("Time (seconds)", fontweight='bold')
-                ax2.set_ylabel("Kinematic Units", fontweight='bold')
-                ax2.legend(loc="upper left", fontsize=8, facecolor='#0F172A', edgecolor='#334155', labelcolor='#F8FAFC')
+                    for ax in (ax1, ax2):
+                        ax.set_facecolor('#1E293B')
+                        ax.tick_params(colors='#F1F5F9', labelsize=9)
+                        for spine in ax.spines.values():
+                            spine.set_color('#334155')
+                        ax.xaxis.label.set_color('#F1F5F9')
+                        ax.yaxis.label.set_color('#F1F5F9')
+                        ax.grid(True, linestyle="--", alpha=0.3, color='#475569')
 
-                plt.tight_layout()
-                st.pyplot(fig)
+                    # Probabilities
+                    ax1.plot(timeline['timestamp_sec'], timeline['pv'], label="Camera Risk P(v)", color="#38BDF8", lw=1.8, linestyle=":")
+                    ax1.plot(timeline['timestamp_sec'], timeline['ps'], label="Sensor Risk P(s)", color="#10B981", lw=1.8, linestyle="--")
+                    ax1.plot(timeline['timestamp_sec'], timeline['p_final'], label="Combined Risk P(final)", color="#F59E0B", lw=2.0)
+                    ax1.plot(timeline['timestamp_sec'], timeline['smoothed_p'], label="Temporal Smoothed Risk", color="#EF4444", lw=2.5)
+                    ax1.axhline(thresh_val, color="#F87171", linestyle=":", label=f"Alert Threshold T={thresh_val}")
+                    ax1.set_ylabel("Risk Probability (0 to 1)", fontweight='bold')
+                    ax1.set_ylim(-0.05, 1.05)
+                    ax1.legend(loc="upper left", ncol=3, fontsize=8, facecolor='#0F172A', edgecolor='#334155', labelcolor='#F8FAFC')
+                    ax1.set_title("Accident Risk Probabilities by Modality", color='#F8FAFC', fontweight='bold', pad=8)
+
+                    # Physical signals
+                    ax2.plot(timeline['timestamp_sec'], timeline['acc_mag'], label="Total G-Force Magnitude A (m/s²)", color="#818CF8", lw=1.8)
+                    ax2.plot(timeline['timestamp_sec'], timeline['gyro_mag'] * 5.0, label="Rotation Magnitude G x5 (rad/s)", color="#F472B6", lw=1.8)
+                    ax2.set_xlabel("Time (seconds)", fontweight='bold')
+                    ax2.set_ylabel("Kinematic Units", fontweight='bold')
+                    ax2.legend(loc="upper left", fontsize=8, facecolor='#0F172A', edgecolor='#334155', labelcolor='#F8FAFC')
+
+                    plt.tight_layout()
+                    st.pyplot(fig)
 
     # -------------------------------------------------------------
     # TAB 3: SYSTEM ARCHITECTURE, ALGORITHMS & FORMULAS (COMPLETE GUIDE)
