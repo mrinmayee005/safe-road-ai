@@ -1,0 +1,265 @@
+{
+  "timestamp": "2026-09-25 00:09:20",
+  "dataset_name": "Real-World Multimodal Telematics Benchmark",
+  "dataset_type": "50Hz Smartphone IMU & Calibrated Vehicle Deceleration",
+  "sample_count": 120,
+  "core_experiments": {
+    "E1: Video-Only": {
+      "accuracy": 0.625,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 0,
+      "tn": 10,
+      "fp": 0,
+      "fn": 6,
+      "confusion_matrix": [
+        [
+          10,
+          0
+        ],
+        [
+          6,
+          0
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E2: Sensor-Only": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 6,
+      "tn": 10,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          10,
+          0
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E3: Video+Sensor Fusion": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 6,
+      "tn": 10,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          10,
+          0
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E4: Temporal Decision": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 6,
+      "tn": 10,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          10,
+          0
+        ],
+        [
+          0,
+          6
+        ]
+      ],
+      "roc_auc": 1.0
+    }
+  },
+  "video_models_comparison": {
+    "mobilenet_v3_small": {
+      "accuracy": 0.625,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 0,
+      "tn": 60,
+      "fp": 0,
+      "fn": 36,
+      "confusion_matrix": [
+        [
+          60,
+          0
+        ],
+        [
+          36,
+          0
+        ]
+      ],
+      "roc_auc": 0.7481481481481481
+    },
+    "resnet18": {
+      "accuracy": 0.75,
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "f1": 0.5,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 12,
+      "tn": 60,
+      "fp": 0,
+      "fn": 24,
+      "confusion_matrix": [
+        [
+          60,
+          0
+        ],
+        [
+          24,
+          12
+        ]
+      ],
+      "roc_auc": 0.8111111111111111
+    }
+  },
+  "sensor_models_comparison": {
+    "random_forest": {
+      "accuracy": 0.9423076923076923,
+      "precision": 1.0,
+      "recall": 0.6923076923076923,
+      "f1": 0.8181818181818182,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 54,
+      "tn": 338,
+      "fp": 0,
+      "fn": 24,
+      "confusion_matrix": [
+        [
+          338,
+          0
+        ],
+        [
+          24,
+          54
+        ]
+      ],
+      "roc_auc": 0.937604308906084
+    },
+    "gradient_boosting": {
+      "accuracy": 0.9375,
+      "precision": 0.9814814814814815,
+      "recall": 0.6794871794871795,
+      "f1": 0.803030303030303,
+      "specificity": 0.9970414201183432,
+      "false_alarm_rate": 0.0029585798816568047,
+      "tp": 53,
+      "tn": 337,
+      "fp": 1,
+      "fn": 25,
+      "confusion_matrix": [
+        [
+          337,
+          1
+        ],
+        [
+          25,
+          53
+        ]
+      ],
+      "roc_auc": 0.9291458048854498
+    },
+    "extra_trees": {
+      "accuracy": 0.9423076923076923,
+      "precision": 1.0,
+      "recall": 0.6923076923076923,
+      "f1": 0.8181818181818182,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 54,
+      "tn": 338,
+      "fp": 0,
+      "fn": 24,
+      "confusion_matrix": [
+        [
+          338,
+          0
+        ],
+        [
+          24,
+          54
+        ]
+      ],
+      "roc_auc": 0.9277423759672281
+    }
+  },
+  "optimal_alpha": 0.0,
+  "optimal_threshold": 0.4555555555555556,
+  "false_alarm_stress_test": [
+    {
+      "scenario": "telematics_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "telematics_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "telematics_pothole",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "telematics_pothole",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "telematics_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "telematics_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    }
+  ]
+}

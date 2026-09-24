@@ -1,0 +1,221 @@
+{
+  "timestamp": "2026-09-25 00:03:57",
+  "dataset_name": "Car Crash Dataset (CCD - User Archive)",
+  "dataset_type": "Real-World Dashcam Video & Kinematic Telemetry",
+  "sample_count": 100,
+  "core_experiments": {
+    "E1: Video-Only": {
+      "accuracy": 0.6428571428571429,
+      "precision": 0.5833333333333334,
+      "recall": 1.0,
+      "f1": 0.7368421052631579,
+      "specificity": 0.2857142857142857,
+      "false_alarm_rate": 0.7142857142857143,
+      "tp": 7,
+      "tn": 2,
+      "fp": 5,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          2,
+          5
+        ],
+        [
+          0,
+          7
+        ]
+      ],
+      "roc_auc": 0.5918367346938775
+    },
+    "E2: Sensor-Only": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 7,
+      "tn": 7,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          7,
+          0
+        ],
+        [
+          0,
+          7
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E3: Video+Sensor Fusion": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 7,
+      "tn": 7,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          7,
+          0
+        ],
+        [
+          0,
+          7
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E4: Temporal Decision": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 7,
+      "tn": 7,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          7,
+          0
+        ],
+        [
+          0,
+          7
+        ]
+      ],
+      "roc_auc": 1.0
+    }
+  },
+  "video_models_comparison": {
+    "mobilenet_v3_small": {
+      "accuracy": 0.5446428571428571,
+      "precision": 0.5352112676056338,
+      "recall": 0.6785714285714286,
+      "f1": 0.5984251968503937,
+      "specificity": 0.4107142857142857,
+      "false_alarm_rate": 0.5892857142857143,
+      "tp": 38,
+      "tn": 23,
+      "fp": 33,
+      "fn": 18,
+      "confusion_matrix": [
+        [
+          23,
+          33
+        ],
+        [
+          18,
+          38
+        ]
+      ],
+      "roc_auc": 0.5714285714285715
+    },
+    "resnet18": {
+      "accuracy": 0.4375,
+      "precision": 0.4578313253012048,
+      "recall": 0.6785714285714286,
+      "f1": 0.5467625899280576,
+      "specificity": 0.19642857142857142,
+      "false_alarm_rate": 0.8035714285714286,
+      "tp": 38,
+      "tn": 11,
+      "fp": 45,
+      "fn": 18,
+      "confusion_matrix": [
+        [
+          11,
+          45
+        ],
+        [
+          18,
+          38
+        ]
+      ],
+      "roc_auc": 0.5044642857142857
+    }
+  },
+  "sensor_models_comparison": {
+    "random_forest": {
+      "accuracy": 0.9897959183673469,
+      "precision": 1.0,
+      "recall": 0.9333333333333333,
+      "f1": 0.9655172413793104,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 42,
+      "tn": 249,
+      "fp": 0,
+      "fn": 3,
+      "confusion_matrix": [
+        [
+          249,
+          0
+        ],
+        [
+          3,
+          42
+        ]
+      ],
+      "roc_auc": 0.9883534136546186
+    },
+    "gradient_boosting": {
+      "accuracy": 0.9829931972789115,
+      "precision": 1.0,
+      "recall": 0.8888888888888888,
+      "f1": 0.9411764705882353,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 40,
+      "tn": 249,
+      "fp": 0,
+      "fn": 5,
+      "confusion_matrix": [
+        [
+          249,
+          0
+        ],
+        [
+          5,
+          40
+        ]
+      ],
+      "roc_auc": 0.9778670236501562
+    },
+    "extra_trees": {
+      "accuracy": 0.9931972789115646,
+      "precision": 1.0,
+      "recall": 0.9555555555555556,
+      "f1": 0.9772727272727273,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 43,
+      "tn": 249,
+      "fp": 0,
+      "fn": 2,
+      "confusion_matrix": [
+        [
+          249,
+          0
+        ],
+        [
+          2,
+          43
+        ]
+      ],
+      "roc_auc": 0.9994645247657296
+    }
+  },
+  "optimal_alpha": 0.0,
+  "optimal_threshold": 0.1
+}

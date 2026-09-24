@@ -1,0 +1,380 @@
+{
+  "timestamp": "2026-09-24 22:32:53",
+  "core_experiments": {
+    "E1: Video-Only": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 24,
+      "tn": 32,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          32,
+          0
+        ],
+        [
+          0,
+          24
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E2: Sensor-Only": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 24,
+      "tn": 32,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          32,
+          0
+        ],
+        [
+          0,
+          24
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E3: Video+Sensor Fusion": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 24,
+      "tn": 32,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          32,
+          0
+        ],
+        [
+          0,
+          24
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "E4: Temporal Decision": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 24,
+      "tn": 32,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          32,
+          0
+        ],
+        [
+          0,
+          24
+        ]
+      ],
+      "roc_auc": 1.0
+    }
+  },
+  "video_models_comparison": {
+    "mobilenet_v3_small": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 192,
+      "tn": 256,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          256,
+          0
+        ],
+        [
+          0,
+          192
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "resnet18": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 192,
+      "tn": 256,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          256,
+          0
+        ],
+        [
+          0,
+          192
+        ]
+      ],
+      "roc_auc": 1.0
+    }
+  },
+  "sensor_models_comparison": {
+    "random_forest": {
+      "accuracy": 0.978021978021978,
+      "precision": 1.0,
+      "recall": 0.8518518518518519,
+      "f1": 0.92,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 184,
+      "tn": 1240,
+      "fp": 0,
+      "fn": 32,
+      "confusion_matrix": [
+        [
+          1240,
+          0
+        ],
+        [
+          32,
+          184
+        ]
+      ],
+      "roc_auc": 0.9500485364396655
+    },
+    "gradient_boosting": {
+      "accuracy": 0.9759615384615384,
+      "precision": 0.983957219251337,
+      "recall": 0.8518518518518519,
+      "f1": 0.913151364764268,
+      "specificity": 0.9975806451612903,
+      "false_alarm_rate": 0.0024193548387096775,
+      "tp": 184,
+      "tn": 1237,
+      "fp": 3,
+      "fn": 32,
+      "confusion_matrix": [
+        [
+          1237,
+          3
+        ],
+        [
+          32,
+          184
+        ]
+      ],
+      "roc_auc": 0.9297229689366785
+    },
+    "extra_trees": {
+      "accuracy": 0.978021978021978,
+      "precision": 1.0,
+      "recall": 0.8518518518518519,
+      "f1": 0.92,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 184,
+      "tn": 1240,
+      "fp": 0,
+      "fn": 32,
+      "confusion_matrix": [
+        [
+          1240,
+          0
+        ],
+        [
+          32,
+          184
+        ]
+      ],
+      "roc_auc": 0.934005376344086
+    }
+  },
+  "fusion_methods_comparison": {
+    "weighted_probability_fusion": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 24,
+      "tn": 32,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          32,
+          0
+        ],
+        [
+          0,
+          24
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "stacking_meta_fusion": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "false_alarm_rate": 0.0,
+      "tp": 24,
+      "tn": 32,
+      "fp": 0,
+      "fn": 0,
+      "confusion_matrix": [
+        [
+          32,
+          0
+        ],
+        [
+          0,
+          24
+        ]
+      ],
+      "roc_auc": 1.0
+    },
+    "optimal_alpha": 0.0,
+    "optimal_threshold": 0.23333333333333334
+  },
+  "false_alarm_stress_test": [
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_speedbump",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    },
+    {
+      "scenario": "normal_hard_brake",
+      "sensor_only_acc": 0,
+      "fused_raw_acc": 0,
+      "temporal_alert": 0,
+      "suppressed_false_alarm": true
+    }
+  ]
+}
